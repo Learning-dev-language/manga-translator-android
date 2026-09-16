@@ -1,3 +1,4 @@
+
 name: Build Manga Translator APK
 
 on:
@@ -5,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout source
@@ -22,13 +23,13 @@ jobs:
 
       - name: Install Android SDK
         run: |
+          yes | sdkmanager --licenses || true
           sdkmanager "platforms;android-36" "build-tools;36.0.0"
 
-      - name: Make Gradle executable
-        run: chmod +x gradlew
-
-      - name: Build debug APK
-        run: ./gradlew :app:assembleDebug --no-daemon
+      - name: Build APK
+        run: |
+          chmod +x gradlew
+          ./gradlew :app:assembleDebug --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
